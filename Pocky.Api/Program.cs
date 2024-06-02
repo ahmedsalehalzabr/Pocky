@@ -11,6 +11,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<AppDbContext>(op =>
       op.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
+// ›Ì «·«’œ«— 8  ÷Ì› ›ﬁÿ «·«‰ Ì Ì »’œ—Ì‰ ›ﬁÿ 
+builder.Services
+    .AddIdentityApiEndpoints<IdentityUser>()
+    .AddEntityFrameworkStores<AppDbContext>();
 
 var app = builder.Build();
 
@@ -24,6 +28,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+// ›Ì «·«’œ«— 8  ÷Ì› ›ﬁÿ «·«‰ Ì Ì »’œ—Ì‰ ›ﬁÿ ÊÂÊ —Õ Ì÷Ì› ﬂ· «·«‰œ»ÊÌ‰ 
+app.MapIdentityApi<IdentityUser>();
 
 app.MapControllers();
 
