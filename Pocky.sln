@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocky.Api", "Pocky.Api\Pocky.Api.csproj", "{A567AC5D-C6F7-40BA-A3BA-0D210E4FD51A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pocky.WASM", "Pocky.WASM\Pocky.WASM.csproj", "{11BD1DB8-4B65-4569-9299-A3E5F0D14C68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pocky.WASM", "Pocky.WASM\Pocky.WASM.csproj", "{11BD1DB8-4B65-4569-9299-A3E5F0D14C68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

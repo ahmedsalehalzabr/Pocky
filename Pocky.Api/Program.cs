@@ -9,6 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(option =>
+  option.AddDefaultPolicy(builder =>
+                builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .WithOrigins("https://localhost:7092")
+                .AllowCredentials()
+                ));
 builder.Services.AddDbContext<AppDbContext>(op =>
       op.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 // ›Ì «·«’œ«— 8  ÷Ì› ›ﬁÿ «·«‰ Ì Ì »’œ—Ì‰ ›ﬁÿ 
@@ -26,7 +34,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthorization();
 // ›Ì «·«’œ«— 8  ÷Ì› ›ﬁÿ «·«‰ Ì Ì »’œ—Ì‰ ›ﬁÿ ÊÂÊ —Õ Ì÷Ì› ﬂ· «·«‰œ»ÊÌ‰ 
 app.MapIdentityApi<IdentityUser>();
