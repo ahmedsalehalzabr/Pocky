@@ -2,6 +2,7 @@
 using Pocky.WASM.Models;
 using System.Net.Http.Json;
 using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
 
 namespace Pocky.WASM.Identity
@@ -78,6 +79,12 @@ namespace Pocky.WASM.Identity
                 Successed = false,
                 ErrorList = ["Invalid email or password"]
             };
+        }
+        public async Task LogoutAsync()
+        {
+            var emptyContent = new StringContent("{}", Encoding.UTF8, "application/json");
+            await _httpClient.PostAsync("auth/logout", emptyContent);
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
     }
 }
