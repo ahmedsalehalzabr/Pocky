@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
 using Pocky.WASM.Models;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Json;
 
 namespace Pocky.WASM.Identity
 {
-    public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory) : AuthenticationStateProvider
+    public class CookieAuthenticationStateProvider(IHttpClientFactory httpClientFactory) : AuthenticationStateProvider, IAccountManagement
     {
         private readonly HttpClient _httpClient = httpClientFactory.CreateClient("Auth");
 
@@ -51,6 +52,32 @@ namespace Pocky.WASM.Identity
 
             }
             return new AuthenticationState(user);
+        }
+
+        public async Task<AuthResult> LoginAsync(LoginModel credentials)
+        {
+            try
+            {
+                var result = await _httpClient.PostAsJsonAsync("login?useCookies=true", new
+                {
+                    credentials.Email,
+                    credentials.Password,
+                });
+                if (result.IsSuccessStatusCode)
+                {
+                    NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+                    return new AuthResult { Successed = true };
+                }
+            }
+            catch
+            {
+
+            }
+            return new AuthResult
+            {
+                Successed = false,
+                ErrorList = ["Invalid email or password"]
+            };
         }
     }
 }
