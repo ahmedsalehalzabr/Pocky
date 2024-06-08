@@ -86,5 +86,65 @@ namespace Pocky.WASM.Identity
             await _httpClient.PostAsync("auth/logout", emptyContent);
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
         }
+
+      
+        public async Task<AuthResult> RegisterAsync(string email, string password)
+        {
+            string[] defaultErrors = ["An unknown error prevented registration"];
+
+            try
+            {
+                var result = await _httpClient.PostAsJsonAsync("register", new
+                {
+                    email,
+                    password,
+                });
+
+                if (result.IsSuccessStatusCode)
+                {
+                    return new AuthResult { Successed = true };
+                }
+
+                var details = await result.Content.ReadAsStringAsync();
+                var problemDetails = JsonDocument.Parse(details);
+
+                var errors = new List<string>();
+                var errorList = problemDetails.RootElement.GetProperty("errors");
+
+                foreach (var error in errorList.EnumerateObject())
+                {
+                    if (error.Value.ValueKind == JsonValueKind.String)
+                    {
+                        errors.Add(error.Value.GetString()!);
+                    }
+                    else if (error.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        var allErrors = error.Value
+                            .EnumerateArray()
+                            .Select(e => e.GetString() ?? string.Empty)
+                            .Where(e => !string.IsNullOrEmpty(e));
+
+                        errors.AddRange(allErrors);
+                    }
+                }
+
+                return new AuthResult
+                {
+                    Successed = false,
+                    ErrorList = [.. errors]
+                };
+            }
+            catch
+            {
+                //Logging
+            }
+
+            return new AuthResult
+            {
+                Successed = false,
+                ErrorList = defaultErrors
+            };
+        }
+
     }
 }
